@@ -1,0 +1,138 @@
+<!doctype html>
+<!-- WORKFLOW-PROVENANCE: website-builder-full BUILD; W2 sfbb8d800b2 (Claude Opus 5.5); 2026-11-01; concept approved ("Approve all four"); tier set by the closing audit (BUILD-NOTES.md) -->
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>1237 Livingstone · Make it yours</title>
+<meta name="description" content="Walk through 1237 Livingstone Avenue in Alta Vista, Ottawa: five bedrooms on three floors. Furnish each room your way and watch the house fill in. This home has sold.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F3EFE7'/%3E%3Cpath d='M6 15 16 7l10 8v10H6z' fill='none' stroke='%231E2730' stroke-width='2'/%3E%3Crect x='13' y='18' width='6' height='7' fill='%23ae4542'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="media/film/f0.webp" as="image" media="(min-width: 768px)">
+<link rel="preload" href="media/film/f0-800.webp" as="image" media="not all and (min-width: 768px)">
+<link rel="stylesheet" href="css/site.css">
+<script>document.documentElement.classList.add('js');if(matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('rm');if(!matchMedia('(min-width: 768px)').matches)document.documentElement.classList.add('phone');(document.fonts?document.fonts.ready:Promise.resolve()).then(()=>document.documentElement.classList.add('fonts-ready'));setTimeout(()=>document.documentElement.classList.add('fonts-ready'),2500);</script>
+</head>
+<body>
+<a class="skip" href="#ending">Skip to the end of the walk-through</a>
+
+<!-- persistent world layer: the walk-through film (page-level, never inside a section) -->
+<div id="world" data-world aria-hidden="true">
+  <div id="frame">
+    <img id="still" src="media/film/f0.webp" srcset="media/film/f0-800.webp 800w, media/film/f0.webp 1600w" sizes="100vw" alt="" width="1600" height="900" fetchpriority="high">
+    <video id="film" muted playsinline preload="none" disablepictureinpicture></video>
+    <canvas id="scrub" width="768" height="432"></canvas>
+    <div id="heroScrim"></div>
+  </div>
+  <div class="world-scrim"></div>
+</div>
+<!-- the house in your hand: one fixed canvas draws the engine model into a moving rect -->
+<div id="hand" aria-hidden="true">
+  <p class="hand-top"><span class="hand-k">You are here</span> <span id="handWhere">Foyer · Main floor</span></p>
+  <div id="handSlot"></div>
+  <p class="hand-bot"><i class="key-here"></i>where you are <i class="key-yours"></i>rooms made yours</p>
+</div>
+<canvas id="modelCanvas" aria-hidden="true"></canvas>
+<div id="modelLabels" aria-hidden="true"></div>
+<div id="modelHit" role="img" aria-label="The three-floor model of the house. Drag or use the arrow keys to turn it."></div>
+
+<header id="top">
+  <a class="mark display" href="#hero" aria-label="1237 Livingstone, back to the start">1237 Livingstone</a>
+  <div class="tally" role="group" aria-labelledby="tallyLabel">
+    <span id="tallyLabel">Rooms made yours</span>
+    <button type="button" id="tallyCount" class="tally-count">None yet</button>
+    <span class="dots" id="dots"></span>
+  </div>
+</header>
+
+<div id="rail" aria-label="Walk-through progress">
+  <div class="cap" aria-live="off"><p class="cap-k" id="railChip">Main floor · Generated camera move</p><p class="cap-t display" id="railRoom">Foyer</p></div>
+  <div class="rail-row">
+    <button id="playBtn" type="button" class="rail-play" aria-label="Play the walk-through to the next room"><span aria-hidden="true">▶</span></button>
+    <ol class="floors" id="floors"></ol>
+  </div>
+</div>
+<p id="phoneLoad" class="phone-load" hidden><span id="phoneLoadText">Loading the walk-through</span><span class="bar"><i id="phoneLoadBar"></i></span></p>
+
+<main id="page">
+  <section id="hero" aria-labelledby="heroTitle">
+    <div class="hero-copy">
+      <p class="kicker">1237 Livingstone Avenue · Alta Vista, Ottawa</p>
+      <h1 id="heroTitle" class="display">Five bedrooms, three floors. <em>Make it yours.</em></h1>
+      <p class="lede">Walk in through the front door. The room you are in glows on the little house beside you, and at each room you can stop and furnish it your way.</p>
+      <div class="hero-act">
+        <a class="btn btn-light" href="#stop-1">Walk through <span aria-hidden="true">↓</span></a>
+        <button class="btn btn-ghost" type="button" id="heroPlay">Play the walk-through</button>
+      </div>
+      <p class="facts">5 bedrooms · 4 baths · three levels · rebuilt in 1998</p>
+      <p class="sold" id="sold">This home has sold. It was listed at $1,099,900.</p>
+    </div>
+  </section>
+  <!-- walk spacers and stops are sized by js/app.js from the film map; the stops are generated from js/copy.js -->
+  <div id="stops"></div>
+  <section id="ending" aria-labelledby="endTitle">
+    <div class="end-grid">
+      <div class="end-copy">
+        <p class="kicker">The end of the walk-through</p>
+        <h2 id="endTitle" class="display">Your 1237 Livingstone.</h2>
+        <p class="lede" id="endLede">The house you just walked through, room by room, set up the way you would live in it.</p>
+        <ul class="tiles" id="tiles"></ul>
+        <div class="end-act">
+          <a class="btn btn-ink" href="tel:+16137425057">Talk to Lucie Martel about homes like this</a>
+          <a class="btn btn-line" href="https://www.martels.ca/listings/default/8/1165725694/74/" rel="noopener">See the original listing</a>
+        </div>
+        <p class="agent">Lucie Martel, Sales Representative · Martels Real Estate Inc. · <a href="tel:+16137425057">613-742-5057</a></p>
+      </div>
+      <div class="end-model"><div class="slot" id="endSlot"></div><p class="slot-note">Drag to turn the house.</p></div>
+    </div>
+  </section>
+  <footer id="foot">
+    <div class="foot-grid">
+      <dl class="factlist">
+        <div><dt>Address</dt><dd>1237 Livingstone Avenue, Ottawa ON K1H 7P7</dd></div>
+        <div><dt>Neighbourhood</dt><dd>Alta Vista: shopping, cafes, restaurants and schools a few steps away; an easy walk or bike ride to Billings Bridge, the Rideau River, the canal and Lansdowne.</dd></div>
+        <div><dt>Bedrooms · baths</dt><dd>5 · 4</dd></div>
+        <div><dt>Built</dt><dd>Totally rebuilt in 1998</dd></div>
+        <div><dt>Outside</dt><dd>Private, hedged, partly fenced deep yard with deck and hot tub; oversized single garage</dd></div>
+        <div><dt>Status</dt><dd>Sold. Listed at $1,099,900 (the asking price, not the sale price).</dd></div>
+      </dl>
+      <div class="disclose">
+        <h2 class="display">About what you saw</h2>
+        <p><b>The walk-through</b> is the listing’s own walkthrough video (Lucie Martel; snow outside the windows) joined by generated camera moves between the real shots; each move is labelled under the film while it plays. Generated stair moves are inferred. The climb up the basement stair is not shown continuously: it dissolves from the stair to the main hall. Some halls were not photographed; the walk passes through them and says so.</p>
+        <p><b>Virtual staging:</b> furniture in photos marked “Virtually staged” is changed digitally, and furnishings are not included. Walls, windows and floors are kept as photographed. The listing photos were taken in autumn.</p>
+        <p><b>The model</b> is traced from the listing’s floor plan (Next Door Photos); wall heights and the 3D look are illustrative. Each room you furnish is filled with its own wall colour, sampled from the listing photo. Measurements come from the plan’s dimension table and are approximate.</p>
+        <p class="muted">Property information from the Martels listing (sold). Buyers should verify measurements. A showcase of the listing engine’s walk-through, floor model and virtual staging.</p>
+      </div>
+    </div>
+  </footer>
+</main>
+<div class="sr-only" aria-live="polite" id="announce"></div>
+<template id="stopTpl">
+  <section class="stop" aria-labelledby="">
+    <div class="stop-in">
+      <div class="cmp" data-state="asis">
+        <img class="cmp-asis" alt="" width="800" height="600" decoding="async">
+        <div class="cmp-top"><img class="cmp-staged" alt="" width="1200" height="900" decoding="async"></div>
+        <span class="tag tag-l">Virtually staged</span><span class="tag tag-r">As it is today</span>
+        <div class="cmp-handle" aria-hidden="true"><span>⟷</span></div>
+        <input class="cmp-range" type="range" min="0" max="100" value="50" aria-label="Drag to compare the staged room with the room as it is today">
+        <p class="cmp-note"></p>
+        <div class="views" role="group" aria-label="Other photos of this room"></div>
+      </div>
+      <div class="panel">
+        <p class="kicker"></p>
+        <h2 class="display"><span class="t"></span> <em></em></h2>
+        <p class="body"></p>
+        <p class="choose-h">Choose what it becomes</p>
+        <div class="choices" role="group"></div>
+        <div class="slot"></div>
+        <div class="panel-foot"><p class="vs-note">Your choice fills this room on the house, in its own wall colour.</p><button type="button" class="btn btn-line btn-sm walk-on">Keep walking <span aria-hidden="true">↓</span></button></div>
+      </div>
+    </div>
+  </section>
+</template>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
